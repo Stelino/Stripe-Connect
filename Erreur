@@ -1,0 +1,22 @@
+require('assets/stripe-php-6.37.0/init.php');
+	
+	\Stripe\Stripe::setApiKey('sk_test_gfgfgfgfgfgfgf');
+	
+	$account_token = $_POST['account_token'];
+	$person_token = $_POST['person_token'];
+	
+	$account = \Stripe\Account::create([
+		'type' => 'custom',
+		'country' => 'FR',
+		'email' => 'bob@example.com',
+		'account_token' => $account_token,
+	]);
+	
+	$account_id = $account->id;
+	
+	$person = \Stripe\Account::createPerson(
+		$account_id,
+		[
+			'person_token' => $person_token,
+		]
+	);
