@@ -1,0 +1,42 @@
+const stripe = Stripe('pk_test_Cicyao626izfgdfgfdgfdgfdg');
+			const myForm = document.querySelector('.my-form');
+				
+			myForm.addEventListener('submit', handleForm);
+
+			async function handleForm(e) {
+				
+				e.preventDefault();
+        
+				const accountResult = await stripe.createToken('account', {
+					business_type: 'company',
+					company: {
+						name: document.querySelector('.inp-company-name').value,
+						address: {
+							line1: document.querySelector('.inp-company-street-address1').value,
+							city: document.querySelector('.inp-company-city').value,
+							state: document.querySelector('.inp-company-state').value,
+							postal_code: document.querySelector('.inp-company-zip').value,
+						},
+					},
+					tos_shown_and_accepted: true,
+				});
+        
+				const personResult = await stripe.createToken('person', {
+					person: {
+						first_name: document.querySelector('.inp-person-first-name').value,
+						last_name: document.querySelector('.inp-person-last-name').value,
+						address: {
+							line1: document.querySelector('.inp-company-street-address1').value,
+							city: document.querySelector('.inp-company-city').value,
+							state: document.querySelector('.inp-company-state').value,
+							postal_code: document.querySelector('.inp-company-zip').value,
+						},
+					},
+				});
+        
+				if (accountResult.token && personResult.token) {
+					document.querySelector('#account-token').value = accountResult.token.id;
+					document.querySelector('#person-token').value = personResult.token.id;
+					myForm.submit();
+				}
+			}
